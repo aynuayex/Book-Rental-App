@@ -27,7 +27,7 @@ import { useEffect, useState } from "react";
 import book1 from "../assets/book1.png";
 import book2 from "../assets/book2.png";
 import axios from "@/api/axios";
-import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
+import { Link as RouterLink, useLocation } from "react-router-dom";
 import useAuth from "@/hooks/useAuth";
 import smile from "@/assets/smile.png";
 
@@ -46,7 +46,6 @@ function Signup() {
   const [persist, setPersist] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormdata] = useState(initialFormData);
-  const navigate = useNavigate();
   const location = useLocation();
     const {setAuth} = useAuth();
 
@@ -57,6 +56,7 @@ function Signup() {
   },[message]);
 
   const handleClose = (e?: React.SyntheticEvent | Event, reason?: string) => {
+    console.log(e);
     if (reason === "clickaway") {
       return;
     }
@@ -78,7 +78,7 @@ function Signup() {
       try {
         const response = await axios.post('/register', {...formData, role: "OWNER"});
         if(response.status === 201) {
-          const { id, email, fullName, success, role, accessToken } = response.data;
+          const { id, email, fullName, role, accessToken } = response.data;
           setAuth({ id, email, fullName, role, accessToken})
           setOpenDialog(true);
           // navigate("/dashboard", {state: {message: success}});
