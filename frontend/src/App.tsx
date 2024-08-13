@@ -1,35 +1,57 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Outlet } from "react-router-dom";
+import { Box, } from "@mui/material";
+// import './App.css'
+import {
+  ADMIN_SIDE_BAR_LIST_ONE,
+  ADMIN_SIDE_BAR_LIST_TWO,
+  DRAWER_WIDTH,
+  OWNER_SIDE_BAR_LIST_ONE,
+  OWNER_SIDE_BAR_LIST_TWO,
+} from "@/constants/DrawerConstansts";
+import Heading from "@/components/Heading";
+import Sidebar from "@/components/Sidebar";
+import useAuth from "./hooks/useAuth";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { auth } = useAuth();
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        // mt: 2,
+        ml: `${DRAWER_WIDTH + 32}px`,
+        mr: 2,
+        gap: 2,
+      }}
+    >
+      {auth && "role" in auth && auth?.role === "SYSADMIN" ? (
+        <>
+          <Sidebar
+            list1={ADMIN_SIDE_BAR_LIST_ONE}
+            list2={ADMIN_SIDE_BAR_LIST_TWO}
+          />
+          <Heading
+            role="Admin"
+            lists={[...ADMIN_SIDE_BAR_LIST_ONE, ...ADMIN_SIDE_BAR_LIST_TWO]}
+          />
+        </>
+      ) : (
+        <>
+          <Sidebar
+            list1={OWNER_SIDE_BAR_LIST_ONE}
+            list2={OWNER_SIDE_BAR_LIST_TWO}
+          />
+          <Heading
+            role="Owner"
+            lists={[...OWNER_SIDE_BAR_LIST_ONE, ...OWNER_SIDE_BAR_LIST_TWO]}
+          />
+        </>
+      )}
+      <Outlet />
+    </Box>
+  );
 }
 
-export default App
+export default App;
