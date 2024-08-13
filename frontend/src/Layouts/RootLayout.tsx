@@ -1,4 +1,4 @@
-import { Box, CircularProgress, CssBaseline } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import { Outlet, useNavigation } from "react-router-dom";
 
 const RootLayout = () => {
@@ -8,7 +8,6 @@ const RootLayout = () => {
     <Box
     bgcolor={"#F0F2FF"}
     >
-        {/* <CssBaseline /> */}
       {navigation.state === "loading" ? (
         <Box sx={{ width: "100vh", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center"}}>
         <CircularProgress />

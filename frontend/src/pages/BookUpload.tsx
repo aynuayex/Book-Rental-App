@@ -7,7 +7,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
   TextField,
   MenuItem,
@@ -41,6 +40,7 @@ const BookUpload = () => {
   };
 
   const handleClose = (e?: React.SyntheticEvent | Event, reason?: string) => {
+    console.log(e);
     if (reason === "clickaway") {
       return;
     }

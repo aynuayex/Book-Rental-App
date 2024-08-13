@@ -1,5 +1,3 @@
-import { DRAWER_WIDTH } from "@/constants/DrawerConstansts";
-import { HEADING_HEIGHT } from "@/constants/headingConstants";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import {
   Box,
@@ -22,9 +20,6 @@ import {
   GridRowParams,
 } from "@mui/x-data-grid";
 import { useState, useEffect, useCallback, useMemo } from "react";
-import CheckIcon from "@mui/icons-material/Check";
-import ClearIcon from "@mui/icons-material/Clear";
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import DeleteIcon from "@mui/icons-material/Delete";
 import useAuth from "@/hooks/useAuth";
 import EditIcon from '@mui/icons-material/Edit';
@@ -52,7 +47,7 @@ const initialFormData = {
 };
 
 const DashboardTable = () => {
-  const { auth, setAuth } = useAuth();
+  const { auth } = useAuth();
   const [open, setOpen] = useState(false);
   const [books, setBooks] = useState<Book[]>([]);
   const [formData, setFormData] = useState(initialFormData);

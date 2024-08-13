@@ -62,7 +62,9 @@ const AvailableBooks = () => {
           dataKey="value"
         >
           {availableBooks?.map((entry, index) => (
-            <Cell key={`cell-${index}`} fill={COLORS[index]} />
+            <>
+            {console.log(entry)}
+            <Cell key={`cell-${index}`} fill={COLORS[index]} /></>
           ))}
         </Pie>
 

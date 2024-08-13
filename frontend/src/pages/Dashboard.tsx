@@ -19,6 +19,7 @@ const Dashboard = () => {
   }, [message]);
 
   const handleClose = (e?: React.SyntheticEvent | Event, reason?: string) => {
+    console.log(e);
     if (reason === "clickaway") {
       return;
     }
