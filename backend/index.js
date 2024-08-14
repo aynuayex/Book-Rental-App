@@ -41,6 +41,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 //routes
+app.get("/", (req, res) => res.send("vercel backend(NODEJS/EXPRESSJS) deployment successful!"))
 app.use(
   "/register",
   require("./routes/register") 
