@@ -2,7 +2,6 @@ import { Alert, Box, Snackbar } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import useAuth from "@/hooks/useAuth";
-import { DRAWER_WIDTH } from "@/constants/DrawerConstansts";
 import { HEADING_HEIGHT } from "@/constants/headingConstants";
 import DashboardTable from "./DashboardTable";
 import AvailableBooks from "./AvailableBooks";
@@ -42,29 +41,32 @@ const Dashboard = () => {
         </Alert>
       </Snackbar>
 
-      <Box sx={{ display: "flex", gap: 2 }}>
+      <Box
+        sx={{
+          display: "flex",
+          gap: 2,
+          height: `calc(100vh - ${HEADING_HEIGHT + 48}px)`,
+        }}
+      >
         <Box
           sx={{
             bgcolor: "white",
-            borderRadius: 1,
+            borderRadius: 3,
             width: "318px",
-            height: `calc(100vh - ${HEADING_HEIGHT + 48 }px)`,
-            //   mb: 2,
             boxShadow: "0 8px 24px 0 rgba(69, 69, 80, 0.1)",
           }}
         >
           Today's stats
           <AvailableBooks />
         </Box>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+        <Box
+          sx={{ display: "flex", flexDirection: "column", gap: 2, flexGrow: 1 }}
+        >
           <Box
             sx={{
               bgcolor: "white",
               borderRadius: 1,
-              // mr: 2,
               height: "346px",
-              // width: `calc(100vw - ${DRAWER_WIDTH + 318 + 32}px)`,
-              width: `calc(100vw - ${DRAWER_WIDTH + 318 + 16}px)`,
               boxShadow: "0 8px 24px 0 rgba(69, 69, 80, 0.1)",
             }}
           >
@@ -76,7 +78,6 @@ const Dashboard = () => {
               bgcolor: "white",
               flexGrow: 1,
               borderRadius: 1,
-              // width: `calc(100% - ${DRAWER_WIDTH}px)`,
               boxShadow: "0 8px 24px 0 rgba(69, 69, 80, 0.1)",
             }}
           >
@@ -84,7 +85,7 @@ const Dashboard = () => {
           </Box>
         </Box>
       </Box>
-      </Box>
+    </Box>
   );
 };
 

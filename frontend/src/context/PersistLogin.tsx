@@ -20,9 +20,9 @@ const PersistLogin = () => {
         isMounted && setIsLoading(false);
       }
     };
-    auth && "accessToken" in auth && auth.accessToken && !persist
-      ? setIsLoading(false)
-      : verifyRefreshToken();
+    !auth.accessToken && persist
+      ? verifyRefreshToken()
+      : setIsLoading(false);
     return () => {
       isMounted = false;
     };
@@ -35,7 +35,7 @@ const PersistLogin = () => {
       ) : isLoading ? (
         <Box
           sx={{
-            width: "100vh",
+            width: "100vw",
             height: "100vh",
             display: "flex",
             justifyContent: "center",

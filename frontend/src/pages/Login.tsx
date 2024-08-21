@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Checkbox,
   FormControlLabel,
   IconButton,
@@ -23,6 +22,7 @@ import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import axios from "@/api/axios";
 import useAuth from "@/hooks/useAuth";
 import useLogOut from "@/hooks/useLogOut";
+import { LoadingButton } from "@mui/lab";
 
 const initialFormData = {
   email: "",
@@ -30,25 +30,33 @@ const initialFormData = {
 };
 
 function Login() {
-  // const [persist, setPersist] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormdata] = useState(initialFormData);
   const navigate = useNavigate();
   const location = useLocation();
-  const { auth, setAuth, persist, setPersist } = useAuth();
+  const { setAuth, persist, setPersist } = useAuth();
   const logOut = useLogOut();
-  
-  console.log(auth);
+
+  // console.log(auth);
   const role = location?.state?.role;
+  // work on this which is after logout from Sidebar
+  // const message = location?.state?.message;
 
   useEffect(() => {
     async () => await logOut();
-    setAuth({});
-  },[]);
+    setAuth({
+      id: "",
+      email: "",
+      fullName: "",
+      role: "",
+      accessToken: "",
+    });
+  }, []);
 
   useEffect(() => {
     localStorage.setItem("persist", JSON.stringify(persist));
-  },[persist])
+  }, [persist]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -58,19 +66,23 @@ function Login() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      setLoading(true);
       console.log(formData, role);
       const response = await axios.post("/login", {
         ...formData,
         role: role || "OWNER",
       });
       if (response.status === 200) {
-        const { id, email, fullName, success, role, accessToken } = response.data;
+        const { id, email, fullName, success, role, accessToken } =
+          response.data;
         setAuth({ id, email, fullName, role, accessToken });
-        navigate("/dashboard", { state: { message: success } });
+        navigate("/dashboard", { state: { message: success }, replace: true });
       }
       console.log(response);
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -160,14 +172,15 @@ function Login() {
               }
             />
           </Box>
-          <Button
+          <LoadingButton
             type="submit"
             variant="contained"
             color="primary"
             size="small"
+            loading={loading}
           >
             Login
-          </Button>
+          </LoadingButton>
           <Typography variant="subtitle2" textAlign={"center"}>
             Have not an account?
             <Link component={RouterLink} to="/">

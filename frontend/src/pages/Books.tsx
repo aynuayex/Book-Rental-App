@@ -162,8 +162,9 @@ const Books = () => {
         gap: 4,
         width: `calc(100vw - ${DRAWER_WIDTH + 48}px)`,
         height: `calc(100vh - ${HEADING_HEIGHT + 48}px)`,
-        borderRadius: 1,
         bgcolor: "white",
+        borderRadius: 1,
+        boxShadow: "0 8px 24px 0 rgba(69, 69, 80, 0.1)",
       }}
     >
       <Box sx={{ width: "95%", height: "100%" }}>

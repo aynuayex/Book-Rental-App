@@ -37,7 +37,7 @@ export interface Book {
   uploadedBy?: string;
 }
 
-const initialFormData = {
+const initialFormData = { 
     id: "",
   book: "",
   author: "",
@@ -67,8 +67,6 @@ const DashboardTable = () => {
       const approved = books.filter((book) => book.id === id)[0].approved;
       // if hacked with javascript
       const response =
-        auth &&
-        "role" in auth &&
         auth?.role === "OWNER" &&
         (await axiosPrivate.post(`/books/${id}`, {
           approved,
@@ -82,6 +80,7 @@ const DashboardTable = () => {
         [id]: checked,
       }));
     } catch (err) {
+      // toast.error(err.config.response.data.message)
       console.error(err);
     }
   };
@@ -167,7 +166,7 @@ const DashboardTable = () => {
                 control={
                   <Switch
                     disabled={
-                      auth && "role" in auth && auth?.role === "SYSADMIN"
+                      auth?.role === "SYSADMIN"
                         ? true
                         : false
                     }
@@ -194,7 +193,7 @@ const DashboardTable = () => {
         },
       },
     ];
-    if (auth && "role" in auth && auth.role === "SYSADMIN") {
+    if (auth.role === "SYSADMIN") {
         const ownerColumn: GridColDef = {
           field: "uploadedBy",
           headerName: "Owner",
@@ -210,10 +209,10 @@ const DashboardTable = () => {
         };
     
         // Insert the owner column at the second index (index 1)
-        baseColumns.splice(1, 0, ownerColumn);
+        baseColumns.splice(2, 0, ownerColumn);
       }
 
-    if (auth && "role" in auth && auth?.role === "OWNER") {
+    if (auth?.role === "OWNER") {
       baseColumns.push({
         field: "actions",
         headerName: "Actions",
@@ -243,12 +242,12 @@ const DashboardTable = () => {
 
     const getBooks = async () => {
       try {
-        // console.log(auth && "id" in auth && auth?.id);
+        // console.log(auth?.id);
         const response = await axiosPrivate.get(
           `${
-            auth && "role" in auth && auth?.role === "SYSADMIN"
+            auth?.role === "SYSADMIN"
               ? "/books"
-              : `/books/${auth && "id" in auth && auth?.id}`
+              : `/books/${auth?.id}`
           }`,
           {
             signal: controller.signal,
@@ -281,10 +280,7 @@ const DashboardTable = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: 4,
-        // width: `calc(100vw - ${DRAWER_WIDTH + 48}px)`,
-        // height: `calc(100vh - ${HEADING_HEIGHT + 48}px)`,
-        height: `346px`,
+        height: "100%",
         borderRadius: 1,
         bgcolor: "white",
       }}

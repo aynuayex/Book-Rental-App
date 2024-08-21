@@ -30,6 +30,7 @@ import axios from "@/api/axios";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import useAuth from "@/hooks/useAuth";
 import smile from "@/assets/smile.png";
+import { LoadingButton } from "@mui/lab";
 
 const initialFormData = {
   fullName: "",
@@ -41,13 +42,14 @@ const initialFormData = {
 };
 
 function Signup() {
+  const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [persist, setPersist] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormdata] = useState(initialFormData);
   const location = useLocation();
-    const {setAuth} = useAuth();
+  const {setAuth} = useAuth();
 
   const message = location?.state?.message;
 
@@ -76,16 +78,18 @@ function Signup() {
         return;
       }
       try {
+        setLoading(true);
         const response = await axios.post('/register', {...formData, role: "OWNER"});
         if(response.status === 201) {
           const { id, email, fullName, role, accessToken } = response.data;
           setAuth({ id, email, fullName, role, accessToken})
           setOpenDialog(true);
-          // navigate("/dashboard", {state: {message: success}});
         }
         console.log(response);
       } catch (err) {
         console.error(err);
+      } finally {
+        setLoading(false);
       }
     console.log(formData);
   };
@@ -317,11 +321,18 @@ function Signup() {
                 }
               />
             </Box>
-            <Button type="submit" variant="contained" color="primary" size="small">
-              Sign up
-            </Button>
+            
+          <LoadingButton
+            type="submit"
+            variant="contained"
+            color="primary"
+            size="small"
+            loading={loading}
+          >
+            Sign up
+          </LoadingButton>
           <Typography variant="subtitle2" textAlign={"center"}>
-            Already have an account?<Link component={RouterLink} to="/sign-in">Login</Link>
+            Already have an account?<Link component={RouterLink} to="/sign-in" replace={true}>Login</Link>
           </Typography>
         </Box>
       </Stack>

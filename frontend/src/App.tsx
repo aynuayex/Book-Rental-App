@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import { Box, } from "@mui/material";
+import { Box } from "@mui/material";
 // import './App.css'
 import {
   ADMIN_SIDE_BAR_LIST_ONE,
@@ -20,13 +20,12 @@ function App() {
       sx={{
         display: "flex",
         flexDirection: "column",
-        // mt: 2,
         ml: `${DRAWER_WIDTH + 32}px`,
         mr: 2,
         gap: 2,
       }}
     >
-      {auth && "role" in auth && auth?.role === "SYSADMIN" ? (
+      {auth?.role === "SYSADMIN" ? (
         <>
           <Sidebar
             list1={ADMIN_SIDE_BAR_LIST_ONE}
@@ -49,7 +48,9 @@ function App() {
           />
         </>
       )}
-      <Outlet />
+      <Box >
+        <Outlet />
+      </Box>
     </Box>
   );
 }

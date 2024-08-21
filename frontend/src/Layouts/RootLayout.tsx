@@ -5,15 +5,21 @@ const RootLayout = () => {
   const navigation = useNavigation();
 
   return (
-    <Box
-    bgcolor={"#F0F2FF"}
-    >
+    <Box>
       {navigation.state === "loading" ? (
-        <Box sx={{ width: "100vh", height: "100vh", display: "flex", justifyContent: "center", alignItems: "center"}}>
-        <CircularProgress />
+        <Box
+          sx={{
+            width: "100vw",
+            height: "100vh",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <CircularProgress />
         </Box>
       ) : (
-          <Outlet />
+        <Outlet />
       )}
     </Box>
   );

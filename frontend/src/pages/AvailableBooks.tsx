@@ -61,10 +61,8 @@ const AvailableBooks = () => {
           outerRadius={80}
           dataKey="value"
         >
-          {availableBooks?.map((entry, index) => (
-            <>
-            {console.log(entry)}
-            <Cell key={`cell-${index}`} fill={COLORS[index]} /></>
+          {availableBooks?.map((entry: {name: string, value: number}, index) => (
+            <Cell key={`cell-${entry.name}`} fill={COLORS[index]} />
           ))}
         </Pie>
 

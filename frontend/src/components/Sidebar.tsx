@@ -38,7 +38,13 @@ export default function Sidebar({list1, list2}: SidebarProps) {
     navigate("/sign-in", {
       state: { message: "You have logged out of your account!" },
     });
-    setAuth({});
+    setAuth({
+      id: "",
+      email: "",
+      fullName: "",
+      role: "",
+      accessToken: "",
+    });
   };
   return (
     <Box>

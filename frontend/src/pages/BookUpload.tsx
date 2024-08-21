@@ -39,7 +39,7 @@ const BookUpload = () => {
     setFormdata((prevFormData) => ({ ...prevFormData, [name]: value }));
   };
 
-  const handleClose = (e?: React.SyntheticEvent | Event, reason?: string) => {
+  const handleClose = (e?: React.SyntheticEvent | Event, reason?: string) => { 
     console.log(e);
     if (reason === "clickaway") {
       return;
@@ -82,6 +82,7 @@ const BookUpload = () => {
         height: `calc(100vh - ${HEADING_HEIGHT + 48}px)`,
         borderRadius: 1,
         bgcolor: "white",
+        boxShadow: "0 8px 24px 0 rgba(69, 69, 80, 0.1)",
       }}
     >
       <Snackbar

@@ -1,5 +1,0 @@
-SyntaxError: Expected ',' or '}' after property value in JSON at position 25
-Error: Not allowed by CORS.
-Error: Not allowed by CORS.
-Error: Not allowed by CORS.
-Error: Not allowed by CORS.

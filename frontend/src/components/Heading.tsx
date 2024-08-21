@@ -1,6 +1,7 @@
 import { Box, Typography } from '@mui/material'
 import { useLocation } from 'react-router-dom'
 import { ADMIN_SIDE_BAR_LIST_ONE, ADMIN_SIDE_BAR_LIST_TWO, OWNER_SIDE_BAR_LIST_ONE, OWNER_SIDE_BAR_LIST_TWO } from "@/constants/DrawerConstansts";
+import { HEADING_HEIGHT } from '@/constants/headingConstants';
 
 type HeadingProps = {
   role: string;
@@ -17,12 +18,9 @@ const Heading = ({role, lists}: HeadingProps) => {
             display: "flex",
             alignItems: "center",
             bgcolor: "white",
-            // mt: 2,
             pl: 4,
             borderRadius: 4,
-            height: "67px",
-            //   width: `calc(100% - ${drawerWidth + 16}px)`,
-            // ml: `${drawerWidth + 32}px`,
+            height: HEADING_HEIGHT,
           }}
         >
           <Typography fontWeight="bold" fontSize="22px" lineHeight={"24px"} >{role}</Typography>
