@@ -7,8 +7,8 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 
-export const DRAWER_WIDTH = 260;
-// export const DRAWER_WIDTH = 279;
+// export const DRAWER_WIDTH = 260;
+export const DRAWER_WIDTH = 279;
 export const ADMIN_SIDE_BAR_LIST_ONE = [
     { text: "Dashboard", icon: React.createElement(DashboardOutlinedIcon), to: '/dashboard' },
     { text: "Books", icon: React.createElement(LibraryBooksOutlinedIcon), to: '/books' },

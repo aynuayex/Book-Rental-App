@@ -82,11 +82,11 @@ export default function Sidebar({list1, list2}: SidebarProps) {
                   bgcolor: location.pathname === list.to? "primary.main": "inherit",
                   opacity: location.pathname === list.to? 1:"60%",
                   borderRadius: 1,
-                  "& .css-10hburv-MuiTypography-root": {
-                    fontSize: "14px",
-                    fontWeight: 500,
-                    lineHeight: "16.94px",
-                  },
+                  // "& .css-10hburv-MuiTypography-root": {
+                  //   fontSize: "14px",
+                  //   fontWeight: 500,
+                  //   lineHeight: "16.94px",
+                  // },
                   ":hover": {
                     bgcolor: location.pathname === list.to ? "primary.main": alpha(theme.palette.primary.light, 0.2),
                     opacity: "100%",
@@ -109,11 +109,11 @@ export default function Sidebar({list1, list2}: SidebarProps) {
                   bgcolor: location.pathname === list.to? "primary.main": "inherit",
                   opacity: location.pathname === list.to? 1: "60%",
                   borderRadius: 1,
-                  "& .css-10hburv-MuiTypography-root": {
-                    fontSize: "14px",
-                    fontWeight: 500,
-                    lineHeight: "16.94px",
-                  },
+                  // "& .css-10hburv-MuiTypography-root": {
+                  //   fontSize: "14px",
+                  //   fontWeight: 500,
+                  //   lineHeight: "16.94px",
+                  // },
                   ":hover": {
                     bgcolor: location.pathname === list.to ? "primary.main": alpha(theme.palette.primary.light, 0.2),
                     opacity: "100%",
@@ -133,7 +133,7 @@ export default function Sidebar({list1, list2}: SidebarProps) {
             textTransform: "none",
             bgcolor: alpha(theme.palette.grey[300], 0.2),
             borderRadius: 1,
-            mt: 21,
+            mt: 15,
             ":hover": {
                     bgcolor: alpha(theme.palette.grey[300], 0.5),
                   },
