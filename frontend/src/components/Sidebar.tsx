@@ -33,10 +33,10 @@ export default function Sidebar({list1, list2}: SidebarProps) {
   const { setAuth } = useAuth();
   const logOut = useLogOut();
 
- const handleLogout = async () => {
+ const handleLogout = async (role: string | undefined) => {
     await logOut();
     navigate("/sign-in", {
-      state: { message: "You have logged out of your account!" },
+      state: { message: "You have logged out of your account!", role },
     });
     setAuth({
       id: "",
@@ -104,7 +104,9 @@ export default function Sidebar({list1, list2}: SidebarProps) {
           {list2.map((list) => (
             <ListItem key={list.text} disablePadding>
               <ListItemButton
-                component={RouterLink} to={list.to} state={{role: list?.role}} 
+                // component={RouterLink} to={list.to}
+                //  state={{role: list?.role}}  
+                onClick = {() => list.to === "/sign-in" ? handleLogout(list.role): navigate(list.to)}
                 sx={{
                   bgcolor: location.pathname === list.to? "primary.main": "inherit",
                   opacity: location.pathname === list.to? 1: "60%",
@@ -128,7 +130,7 @@ export default function Sidebar({list1, list2}: SidebarProps) {
         </List>
         <Divider color="#F8F8F8" sx={{ opacity: 0.4 }} />
         <Button
-          onClick={handleLogout}
+          onClick={() => handleLogout(undefined)}
           sx={{
             textTransform: "none",
             bgcolor: alpha(theme.palette.grey[300], 0.2),

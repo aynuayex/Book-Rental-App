@@ -1,10 +1,12 @@
 import {
+  Alert,
   Box,
   Checkbox,
   FormControlLabel,
   IconButton,
   InputAdornment,
   Link,
+  Snackbar,
   Stack,
   TextField,
   Typography,
@@ -21,7 +23,6 @@ import book2 from "../assets/book2.png";
 import { Link as RouterLink, useLocation, useNavigate } from "react-router-dom";
 import axios from "@/api/axios";
 import useAuth from "@/hooks/useAuth";
-import useLogOut from "@/hooks/useLogOut";
 import { LoadingButton } from "@mui/lab";
 
 const initialFormData = {
@@ -30,29 +31,21 @@ const initialFormData = {
 };
 
 function Login() {
+  const [open, setOpen] = useState(false);
+  const [errMsg, setErrMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormdata] = useState(initialFormData);
   const navigate = useNavigate();
   const location = useLocation();
   const { setAuth, persist, setPersist } = useAuth();
-  const logOut = useLogOut();
 
-  // console.log(auth);
   const role = location?.state?.role;
-  // work on this which is after logout from Sidebar
-  // const message = location?.state?.message;
+  const message = location?.state?.message;
 
   useEffect(() => {
-    async () => await logOut();
-    setAuth({
-      id: "",
-      email: "",
-      fullName: "",
-      role: "",
-      accessToken: "",
-    });
-  }, []);
+    message && setOpen(true);
+  },[message]);
 
   useEffect(() => {
     localStorage.setItem("persist", JSON.stringify(persist));
@@ -61,6 +54,14 @@ function Login() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormdata((prevFormData) => ({ ...prevFormData, [name]: value }));
+  };
+
+  const handleClose = (e?: React.SyntheticEvent | Event, reason?: string) => {
+    console.log(e);
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpen(false);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -79,8 +80,24 @@ function Login() {
         navigate("/dashboard", { state: { message: success }, replace: true });
       }
       console.log(response);
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
+      if (!err?.response) {
+        setErrMsg("Server can not be reached, Please Try again later!");
+      } else if (err.response?.status === 400) {
+        setErrMsg("Missing Email or Password!");
+      } else if (err.response?.status === 401) {
+        setErrMsg(
+          "Unauthorized, Your Email and/or Password is not correct!"
+        );
+      } else if (err.response?.status === 403) {
+        setErrMsg(
+          "Forbidden,Your account is not approved by Admin!"
+        );
+      } else {
+        setErrMsg("Login Failed, Please Try again later!");
+      }
+      setOpen(true);
     } finally {
       setLoading(false);
     }
@@ -95,6 +112,19 @@ function Login() {
           height: "100vh",
         }}
       >
+        <Snackbar
+          autoHideDuration={8000}
+          open={open}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+        >
+          <Alert severity={errMsg? "error":"info"} variant="filled" onClose={handleClose}>
+            {errMsg? errMsg: message}
+          </Alert>
+        </Snackbar>
         <Box
           sx={{
             width: "50%",
@@ -124,7 +154,7 @@ function Login() {
             <Typography variant="h4">Book Rent</Typography>
           </Stack>
           <Typography variant="h5" sx={{ mb: -1, cursor: "default" }}>
-            Login
+            Login/{role === "SYSADMIN"?"Admin":"Owner"}
           </Typography>
           <Divider sx={{ mb: 3 }} />
           <TextField

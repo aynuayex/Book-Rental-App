@@ -12,10 +12,13 @@ const handleNewUser = async (req, res) => {
         .json({ message: "full Name, email, password, location, phoneNumber and role are required!" });
       }
     //check for duplicate users in the db
-    const duplicate = await prisma.user.findFirst({
-      where: {fullName, email, role}
+    // const duplicate = await prisma.user.findFirst({
+    //   where: {fullName, email, role}
+    // });
+    const duplicate = await prisma.user.findUnique({
+      where: {email}
     });
-    if (duplicate) return res.status(409).json({"message": "user already exist with that information!"}); //Conflict
+    if (duplicate) return res.status(409).json({"message": "user already exist with that information, Please change Email!"}); //Conflict
       // encrypt password
       const hashedPwd = await bcrypt.hash(password, 10);
 

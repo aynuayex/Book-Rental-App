@@ -64,8 +64,7 @@ const DashboardTable = () => {
 
   const handleChange = async (id: string, checked: boolean) => {
     try {
-      const approved = books.filter((book) => book.id === id)[0].approved;
-      // if hacked with javascript
+      const approved = books.filter((book) => book.id === id)[0]?.approved;
       const response =
         auth?.role === "OWNER" &&
         (await axiosPrivate.post(`/books/${id}`, {
@@ -246,8 +245,8 @@ const DashboardTable = () => {
         const response = await axiosPrivate.get(
           `${
             auth?.role === "SYSADMIN"
-              ? "/books"
-              : `/books/${auth?.id}`
+              ? "/books/available"
+              : `/books/available/${auth?.id}`
           }`,
           {
             signal: controller.signal,

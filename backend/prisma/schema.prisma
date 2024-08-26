@@ -23,8 +23,10 @@ model User {
   refreshToken String[]
   approved     Boolean  @default(false)
   role         Role     @default(OWNER)
-  wallet String  @default("0")
+  wallet       Float   @default(0)
   books        Book[]
+  rentals      Rental[]
+  monthlyEarnings MonthlyEarnings[]
   // role        Role    @default(CUSTOMER) 
   // roles Roles?
 }
@@ -40,18 +42,44 @@ model Book {
   book         String
   author       String
   category     Category
-  quantity     String
-  price        String
+  quantity     Float
+  price        Float
   approved     Boolean  @default(false)
-  rented     Boolean  @default(false)
+  rented       Boolean  @default(false)
   uploadedBy   User?    @relation(fields: [uploadedById], references: [id])
   uploadedById String?
+  rentals      Rental[]
 }
 
 enum Category {
   FICTION
   SELF_HELP
   BUSINESS
+}
+
+model Rental {
+  id       String   @id @default(uuid())
+  book     Book?    @relation(fields: [bookId], references: [id], onDelete: SetNull) // On book deletion, set the bookId to NULL in rentals
+  bookId   String?
+  user     User?    @relation(fields: [userId], references: [id], onDelete: SetNull) // On user deletion, set the userId to NULL in rentals
+  userId   String?
+  amount   Float
+  rentedAt DateTime @default(now())
+
+  @@unique([bookId, userId]) // Ensures no duplicate entries for the same book and user
+}
+
+model MonthlyEarnings {
+  id            String   @id @default(uuid())
+  year          Int
+  month         Int
+  totalEarnings Float
+  user     User?    @relation(fields: [userId], references: [id]) 
+  userId   String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([userId, year, month]) // Ensures no duplicate entries for the same month and year
 }
 
 // model Roles {

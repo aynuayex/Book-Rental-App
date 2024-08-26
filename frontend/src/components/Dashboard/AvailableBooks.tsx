@@ -1,15 +1,17 @@
+import useAuth from "@/hooks/useAuth";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { Box, Paper, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Cell, Legend, Pie, PieChart, Tooltip, LegendProps } from "recharts";
 
 interface CustomizedLegendProps extends LegendProps {
-    payload?: any[]; 
-  }
-  
+  payload?: any[];
+}
+
 const COLORS = ["#006AFF", "#52C93F", "#FF2727"];
 
 const AvailableBooks = () => {
+  const {auth} = useAuth();
   const [availableBooks, setAvailableBooks] = useState([]);
   const axiosPrivate = useAxiosPrivate();
 
@@ -19,7 +21,7 @@ const AvailableBooks = () => {
 
     const getBooks = async () => {
       try {
-        const response = await axiosPrivate.get("/books/available", {
+        const response = await axiosPrivate.get(`${auth.role==="SYSADMIN"?`/books/available/category`: `/books/available/category/${auth.id}`}`, {
           signal: controller.signal,
         });
         console.log(response.data);
@@ -37,9 +39,9 @@ const AvailableBooks = () => {
 
   return (
     <Box component={Paper}>
-      <Box sx={{ display: "flex", justifyContent: "space-between", p: 2 }}>
+      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" , p: 2 }}>
         <Typography
-          component={"header"}
+          fontFamily="Inter"
           fontSize={"18px"}
           fontWeight={500}
           lineHeight="24px"
@@ -47,11 +49,15 @@ const AvailableBooks = () => {
         >
           Available Books
         </Typography>
-        <Typography component={"header"} fontSize={"12px"} color="#656575">
+        <Typography
+          fontFamily="Inter"
+          fontSize={"12px"}
+          color="#656575"
+        >
           Today
         </Typography>
       </Box>
-      <PieChart width={288} height={360}>
+      <PieChart width={288} height={278}>
         {/* <PieChart width={318} height={400}> */}
         <Pie
           data={availableBooks}
@@ -61,14 +67,16 @@ const AvailableBooks = () => {
           outerRadius={80}
           dataKey="value"
         >
-          {availableBooks?.map((entry: {name: string, value: number}, index) => (
-            <Cell key={`cell-${entry.name}`} fill={COLORS[index]} />
-          ))}
+          {availableBooks?.map(
+            (entry: { name: string; value: number }, index) => (
+              <Cell key={`cell-${entry.name}`} fill={COLORS[index]} />
+            )
+          )}
         </Pie>
 
         <Tooltip />
         <Legend
-        width={200}
+          width={200}
           iconType="circle"
           layout="vertical"
           content={<CustomizedLegend />}
@@ -80,12 +88,12 @@ const AvailableBooks = () => {
 
 const CustomizedLegend: React.FC<CustomizedLegendProps> = ({ payload }) => {
   return (
-    <Box>
+    <Box sx={{ mt: 3 }}>
       {payload?.map((entry) => (
         <Box
           key={entry.value}
           sx={{
-            mb: 1, 
+            mb: 1,
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
@@ -98,7 +106,7 @@ const CustomizedLegend: React.FC<CustomizedLegendProps> = ({ payload }) => {
                 height: 12,
                 bgcolor: entry.color,
                 borderRadius: "50%",
-                mr: 1, 
+                mr: 1,
               }}
             />
             <Typography variant="body2">
@@ -119,5 +127,3 @@ const CustomizedLegend: React.FC<CustomizedLegendProps> = ({ payload }) => {
 };
 
 export default AvailableBooks;
-
-

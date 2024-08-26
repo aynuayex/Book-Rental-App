@@ -16,7 +16,8 @@ const handleLogin = async (req, res) => {
     if (!foundUser) return res.sendStatus(401); //unAuthorized
     //evaluate password
     const match = await bcrypt.compare(password, foundUser?.password);
-    if (match) {
+    if (!match) return res.sendStatus(401);
+    if (!foundUser.approved) return res.sendStatus(403); //forbiden
       // create JWTs
       const accessToken = jwt.sign(
         { userInfo: { fullName: foundUser.fullName, email, role } },
@@ -70,9 +71,7 @@ const handleLogin = async (req, res) => {
         maxAge: 24 * 60 * 60 * 1000,
       });
       res.status(200).json({ success: `Success, Logged in as ${result.fullName}!`, id: result.id ,email, fullName: result.fullName, role, accessToken });
-    } else {
-      res.sendStatus(401);
-    }
+    
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

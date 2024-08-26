@@ -22,7 +22,7 @@ class DBConnector extends EventEmitter {
 
     async disconnect() {
         await this.prisma.$disconnect();
-        console.log("Prisma disconnected");
+        console.log("Prisma disconnected From Neon DB");
     }
 }
 

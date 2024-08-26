@@ -1,10 +1,13 @@
-import { Alert, Box, Snackbar } from "@mui/material";
+import { Alert, Box, Snackbar, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import useAuth from "@/hooks/useAuth";
 import { HEADING_HEIGHT } from "@/constants/headingConstants";
-import DashboardTable from "./DashboardTable";
-import AvailableBooks from "./AvailableBooks";
+import DashboardTable from "../components/Dashboard/DashboardTable";
+import AvailableBooks from "../components/Dashboard/AvailableBooks";
+import ThisMonthStatics from "@/components/Dashboard/ThisMonthStatics";
+import { format } from "date-fns";
+import DashboardGraph from "@/components/Dashboard/DashboardGraph";
 
 const Dashboard = () => {
   const [open, setOpen] = useState(false);
@@ -50,13 +53,37 @@ const Dashboard = () => {
       >
         <Box
           sx={{
+            p: 2,
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
             bgcolor: "white",
             borderRadius: 3,
             width: "318px",
             boxShadow: "0 8px 24px 0 rgba(69, 69, 80, 0.1)",
           }}
         >
-          Today's stats
+          <Box>
+            <Typography
+              variant={"h2"}
+              fontFamily="Inter"
+              fontWeight={"500"}
+              fontSize={"20px"}
+              lineHeight={"30px"}
+              color="#525256"
+            >
+              This Month Statics
+            </Typography>
+            <Typography
+              variant={"body2"}
+              fontFamily="Inter"
+              color={"#A3A3A3"}
+              lineHeight={"18px"}
+            >
+              {format(new Date(), "EEE, dd MMM, yyyy, hh.mm a")}
+            </Typography>
+          </Box>
+          <ThisMonthStatics />
           <AvailableBooks />
         </Box>
         <Box
@@ -81,7 +108,7 @@ const Dashboard = () => {
               boxShadow: "0 8px 24px 0 rgba(69, 69, 80, 0.1)",
             }}
           >
-            Graph
+            <DashboardGraph />
           </Box>
         </Box>
       </Box>

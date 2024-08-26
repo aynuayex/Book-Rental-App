@@ -68,6 +68,9 @@ app.use(
   require("./routes/owner") 
 );
 
+app.use("/earn", verifyJWT,
+  require("./routes/earn")
+)
 // default(404)
 app.all("*", (req, res) => {
   res.status(404).json({ error: "404 Not Found!" });

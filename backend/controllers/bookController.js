@@ -8,9 +8,19 @@ const handleBookUpload = async (req, res) => {
     const findUser = await prisma.user.findFirst({
       where: {
         email,
-        books: { every: { book, author, category, quantity, price } },
+        books: {
+          some: {
+            book,
+            author,
+            category,
+            quantity: Number(quantity),
+            price: Number(price),
+          },
+        },
       },
+      include: { books: true },
     });
+    console.log({ findUser });
     if (findUser) return res.sendStatus(409);
     const user = await prisma.user.update({
       where: { email },
@@ -20,16 +30,17 @@ const handleBookUpload = async (req, res) => {
             book,
             author,
             category,
-            quantity,
-            price,
+            quantity: Number(quantity),
+            price: Number(price),
           },
         },
       },
       include: { books: true },
     });
-    console.log(user);
+    console.log({ user });
     res.sendStatus(201);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: err.message });
   }
 };
@@ -50,12 +61,29 @@ const handleGetAllBooks = async (req, res) => {
   }
 };
 
-const handleBookGetByUserId = async (req, res) => {
+const handleGetAvailableBooks = async (req, res) => {
+  try {
+    const allBooks = await prisma.book.findMany({
+      where: { approved: true },
+      include: { uploadedBy: { select: { fullName: true } } },
+    });
+    const allBooksWithFullNames = allBooks.map((book) => ({
+      ...book,
+      uploadedBy: book.uploadedBy.fullName,
+    }));
+    console.log(allBooksWithFullNames);
+    res.status(200).json({ allBooks: allBooksWithFullNames });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+const handleGetAvailableBooksByUserId = async (req, res) => {
   try {
     const { id } = req.params;
     console.log(id);
     const allBooksByUserId = await prisma.book.findMany({
-      where: { uploadedById: id },
+      where: { approved: true, uploadedById: id },
     });
     console.log(allBooksByUserId);
     res.status(200).json({ allBooks: allBooksByUserId });
@@ -65,7 +93,7 @@ const handleBookGetByUserId = async (req, res) => {
   }
 };
 
-const handleGetAvailableBooks = async (req, res) => {
+const handleGetAvailableBooksByCategory = async (req, res) => {
   try {
     const availableBooks = await prisma.book.findMany({
       where: { approved: true, rented: false },
@@ -83,29 +111,61 @@ const handleGetAvailableBooks = async (req, res) => {
       })
     );
 
-    console.log(bookCategoryArray);
+    console.log({ bookCategoryArray });
     res.status(200).json({ bookCategoryArray });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
 
-const handleBookUpdate = async (req, res) => {
+const handleGetAvailableBooksByCategoryUserId = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { approved, rented } = req.body;
-    console.log(req.params);
-    console.log(req.body);
-    const book = await prisma.book.update({
-      where: { id },
-      data: { approved, rented },
+    const id = req.params.id;
+    const availableBooks = await prisma.book.findMany({
+      where: { approved: true, rented: false, uploadedById: id },
     });
-    console.log(book);
-    res.sendStatus(204);
+    const bookCategoryCount = availableBooks.reduce((acc, book) => {
+      const category = book.category;
+      acc[category] = (acc[category] || 0) + 1;
+      return acc;
+    }, {});
+    console.log(bookCategoryCount);
+    const bookCategoryArray = Object.entries(bookCategoryCount).map(
+      ([name, value]) => ({
+        name,
+        value,
+      })
+    );
+
+    console.log({ bookCategoryArray });
+    res.status(200).json({ bookCategoryArray });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
+
+const handleBookUpdate = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { approved, rented } = req.body;
+    console.log(req.params);
+    console.log({haha: req.body});
+    const book = await prisma.book.update({
+      where: { id },
+      data: { approved, rented },
+    });
+    console.log({stopped: book});
+    if (approved === true && rented === true) {
+      return next(); // Pass control to the next middleware
+    }
+
+    // If the condition is not met, send a response
+    return res.sendStatus(204);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 const handleBookDetailUpdate = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -139,9 +199,11 @@ const handleBookDelete = async (req, res, next) => {
 module.exports = {
   handleBookUpload,
   handleGetAllBooks,
-  handleBookGetByUserId,
+  handleGetAvailableBooks,
+  handleGetAvailableBooksByUserId,
   handleBookUpdate,
   handleBookDetailUpdate,
   handleBookDelete,
-  handleGetAvailableBooks,
+  handleGetAvailableBooksByCategory,
+  handleGetAvailableBooksByCategoryUserId,
 };
